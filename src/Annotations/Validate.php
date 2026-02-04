@@ -6,54 +6,26 @@ namespace TheCodingMachine\GraphQLite\Laravel\Annotations;
 
 use Attribute;
 use BadMethodCallException;
-use TheCodingMachine\GraphQLite\Annotations\MiddlewareAnnotationInterface;
 use TheCodingMachine\GraphQLite\Annotations\ParameterAnnotationInterface;
-use function is_string;
-use function ltrim;
 
 /**
- * Use this annotation to validate a parameter for a query or mutation.
+ * Use this attribute to validate a parameter for a query or mutation.
  *
- * @Annotation
- * @Target({"METHOD"})
- * @Attributes({
- *   @Attribute("for", type = "string"),
- *   @Attribute("rule", type = "string")
- * })
+ * Usage: #[Validate('email')] or #[Validate('gt:42')]
  */
-#[Attribute(Attribute::TARGET_PARAMETER)]
+#[Attribute(Attribute::TARGET_PARAMETER | Attribute::IS_REPEATABLE)]
 class Validate implements ParameterAnnotationInterface
 {
-    /** @var string */
-    private $for;
-    /** @var string */
-    private $rule;
+    private string $rule;
 
-    /**
-     * @param array<string, mixed> $values
-     */
-    public function __construct($rule = [])
+    public function __construct(string $rule)
     {
-        $values = $rule;
-        if (is_string($values)) {
-            $this->rule = $values;
-        } else {
-            $this->rule = $values['rule'] ?? null;
-            if (isset($values['for'])) {
-                $this->for = ltrim($values['for'], '$');
-            }
-        }
-        if (! isset($values['rule'])) {
-            throw new BadMethodCallException('The @Validate annotation must be passed a rule. For instance: "#Validate("email")" in PHP 8+ or "@Validate(for="$email", rule="email")" in PHP 7+');
-        }
+        $this->rule = $rule;
     }
 
     public function getTarget(): string
     {
-        if ($this->for === null) {
-            throw new BadMethodCallException('The @Validate annotation must be passed a target. For instance: "@Validate(for="$email", rule="email")"');
-        }
-        return $this->for;
+        throw new BadMethodCallException('The #[Validate] attribute is applied directly to parameters, getTarget() should not be called.');
     }
 
     public function getRule(): string
