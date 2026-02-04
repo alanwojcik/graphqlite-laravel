@@ -126,9 +126,9 @@ class GraphQLiteServiceProvider extends ServiceProvider
         $this->app->singleton('graphqliteCache', static function () {
             if (extension_loaded('apcu') && ini_get('apc.enabled')) {
                 return new Psr16Cache(new ApcuAdapter());
-            } else {
-                return new Psr16Cache(new PhpFilesAdapter());
             }
+
+            return new Psr16Cache(new PhpFilesAdapter());
         });
 
         $this->app->singleton(CachePurger::class, static function (Application $app) {
@@ -162,10 +162,10 @@ class GraphQLiteServiceProvider extends ServiceProvider
                 $types = [ $types ];
             }
             foreach ($controllers as $namespace) {
-                $service->addControllerNamespace($namespace);
+                $service->addNamespace($namespace);
             }
             foreach ($types as $namespace) {
-                $service->addTypeNamespace($namespace);
+                $service->addNamespace($namespace);
             }
 
             if ($this->app->environment('production')) {
