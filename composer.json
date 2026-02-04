@@ -20,7 +20,7 @@
         "test": "phpunit"
     },
     "require": {
-        "php": "^8.1",
+        "php": "^8.3",
         "thecodingmachine/graphqlite": "^v8.1.0",
         "illuminate/console": "^9 || ^10 | ^11 | ^12",
         "illuminate/container": "^9 || ^10 | ^11 | ^12",

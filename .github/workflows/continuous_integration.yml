@@ -21,11 +21,11 @@ jobs:
       matrix:
         include:
           - install-args: "--prefer-lowest"
-            php-version: "8.1"
+            php-version: "8.3"
           - install-args: ""
-            php-version: "8.1"
+            php-version: "8.3"
           - install-args: ""
-            php-version: "8.2"
+            php-version: "8.3"
       fail-fast: false
 
     steps:
