@@ -161,10 +161,10 @@ class GraphQLiteServiceProvider extends ServiceProvider
             if (!is_iterable($types)) {
                 $types = [ $types ];
             }
-            foreach ($controllers as $namespace) {
+            foreach ($types as $namespace) {
                 $service->addNamespace($namespace);
             }
-            foreach ($types as $namespace) {
+            foreach ($controllers as $namespace) {
                 $service->addNamespace($namespace);
             }
 
