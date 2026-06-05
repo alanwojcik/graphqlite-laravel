@@ -9,7 +9,6 @@ use GraphQL\Error\DebugFlag;
 use GraphQL\Executor\ExecutionResult;
 use GraphQL\Executor\Promise\Promise;
 use GraphQL\Server\StandardServer;
-use GraphQL\Upload\UploadMiddleware;
 use TheCodingMachine\GraphQLite\Http\HttpCodeDecider;
 use TheCodingMachine\GraphQLite\Http\HttpCodeDeciderInterface;
 use function array_map;
@@ -17,7 +16,6 @@ use function json_decode;
 use function json_last_error;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
-use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
 use Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use function max;
@@ -36,11 +34,11 @@ class GraphQLiteController
     /** @var HttpCodeDeciderInterface */
     private $httpCodeDecider;
 
-    public function __construct(StandardServer $standardServer, HttpCodeDeciderInterface $httpCodeDecider, HttpMessageFactoryInterface $httpMessageFactory = null, ?int $debug = DebugFlag::RETHROW_UNSAFE_EXCEPTIONS)
+    public function __construct(StandardServer $standardServer, HttpCodeDeciderInterface $httpCodeDecider, HttpMessageFactoryInterface $httpMessageFactory, ?int $debug = DebugFlag::RETHROW_UNSAFE_EXCEPTIONS)
     {
         $this->standardServer = $standardServer;
         $this->httpCodeDecider = $httpCodeDecider;
-        $this->httpMessageFactory = $httpMessageFactory ?: new DiactorosFactory();
+        $this->httpMessageFactory = $httpMessageFactory;
         $this->debug = $debug === null ? false : $debug;
     }
 
@@ -66,7 +64,7 @@ class GraphQLiteController
 
         if (class_exists('\GraphQL\Upload\UploadMiddleware')) {
             // Let's parse the request and adapt it for file uploads.
-            $uploadMiddleware = new UploadMiddleware();
+            $uploadMiddleware = new \GraphQL\Upload\UploadMiddleware();
             $psr7Request = $uploadMiddleware->processRequest($psr7Request);
         }
 
